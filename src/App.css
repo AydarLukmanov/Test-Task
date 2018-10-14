@@ -30,3 +30,12 @@
     transform: rotate(360deg);
   }
 }
+
+
+.city {
+  background: white;
+  border: solid 2px black;
+  border-radius: 10px;
+  width: 100px;
+  padding: 5px;
+}
