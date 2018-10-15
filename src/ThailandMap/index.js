@@ -1,61 +1,58 @@
-import React, { Component } from "react";
-import GoogleMapReact from "google-map-react";
-import City from "./City";
+import React, { Component } from 'react';
+import GoogleMapReact from 'google-map-react';
+import City from './City';
 
 const citiesMap = {
   A: {
-    name: "Bangkok",
+    name: 'Bangkok',
     lat: 13.7563,
-    lng: 100.5018
+    lng: 100.5018,
   },
   B: {
-    name: "Pattaya",
+    name: 'Pattaya',
     lat: 12.9236,
-    lng: 100.8825
+    lng: 100.8825,
   },
   C: {
-    name: "Chiang Mai",
+    name: 'Chiang Mai',
     lat: 18.7061,
-    lng: 98.9817
+    lng: 98.9817,
   },
   D: {
-    name: "Phitsanulok",
+    name: 'Phitsanulok',
     lat: 16.8211,
-    lng: 100.2659
+    lng: 100.2659,
   },
   E: {
-    name: "Khon Kaen",
+    name: 'Khon Kaen',
     lat: 16.4322,
-    lng: 102.8236
+    lng: 102.8236,
   },
   F: {
-    name: "Chumphon Province",
+    name: 'Chumphon Province',
     lat: 10.493,
-    lng: 99.18
-  }
+    lng: 99.18,
+  },
 };
 
-const exampleWeights = "AB1, AC4, AD10, BE3, CD4, CF2, DE1, EB3, EA2, FD1";
+const exampleWeights = 'AB1, AC4, AD10, BE3, CD4, CF2, DE1, EB3, EA2, FD1';
 
-const grapth = exampleWeights.split(", ").map(str => {
+const grapth = exampleWeights.split(', ').map((str) => {
   const from = citiesMap[str[0]];
   const to = citiesMap[str[1]];
-  const weight = parseInt(str[2]);
+  const weight = parseInt(str[2], 10);
   return {
     from,
     to,
-    weight
+    weight,
   };
 });
 
 export default class ThailandMap extends Component {
-  static defaultProps = {
-    center: {
-      lat: 14.7563,
-      lng: 100.5018
-    },
-    zoom: 7
-  };
+  constructor() {
+    super();
+    this.state = {};
+  }
 
   render() {
     const selectedPath = null;
@@ -63,11 +60,14 @@ export default class ThailandMap extends Component {
     return (
       <div className="map">
         <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyAtN7-KIU2yT68bkrgBXRyIxLL_blLGf4M" }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
+          bootstrapURLKeys={{ key: 'AIzaSyAtN7-KIU2yT68bkrgBXRyIxLL_blLGf4M' }}
+          defaultCenter={{
+            lat: 14.7563,
+            lng: 100.5018,
+          }}
+          defaultZoom={7}
         >
-          {Object.keys(citiesMap).map(key => {
+          {Object.keys(citiesMap).map((key) => {
             const city = citiesMap[key];
             const { name, lat, lng } = city;
             return (
