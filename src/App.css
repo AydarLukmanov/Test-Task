@@ -39,3 +39,12 @@
   width: 100px;
   padding: 5px;
 }
+.city.inactive {
+  color: gray;
+  border-color: gray;
+}
+
+.map {
+   height: 100vh;
+   width: 100%;
+}
