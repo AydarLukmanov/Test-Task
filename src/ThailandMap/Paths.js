@@ -27,6 +27,9 @@ const Paths = ({
     <div>
       <div>Start: {start.name} </div>
       <div>End: {end.name} </div>
+      { paths.length === 0 && 'No such route'}
+      { paths.length === 1 && 'One route found'}
+      { paths.length > 1 && `${paths.length} routes found`}
       {paths
         .map((path, index) => ({
           path,
