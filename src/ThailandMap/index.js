@@ -22,6 +22,41 @@ export default class ThailandMap extends Component {
 
   selectPath = selectedPath => this.setState({ selectedPath });
 
+  handleGoogleMapApi = (google) => {
+    this.google = google;
+  };
+
+  drawSelectedRoute = () => { // TODO it may leak
+    if (this.flightPath) this.flightPath.setMap(null);
+
+    const { selectedPath, paths } = this.state;
+    if (selectedPath === null) return;
+    const path = paths[selectedPath];
+
+    const lineSymbol = {
+      path: this.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+    };
+
+    this.flightPath = new this.google.maps.Polyline({
+      path: [...path.map(({ from }) => from), path[path.length - 1].to],
+      icons: [{
+        icon: lineSymbol,
+        offset: '100%',
+        repeat: '50px',
+      }],
+      geodesic: true,
+      strokeColor: '#33BD4E',
+      strokeOpacity: 1,
+      strokeWeight: 5,
+    });
+
+    this.flightPath.setMap(this.google.map);
+  };
+
+  componentDidUpdate = () => {
+    if (this.google) this.drawSelectedRoute();
+  }
+
   render() {
     const {
       start, end, paths, selectedPath,
@@ -39,6 +74,8 @@ export default class ThailandMap extends Component {
           />
         </div>
         <GoogleMapReact
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={this.handleGoogleMapApi}
           bootstrapURLKeys={{ key: 'AIzaSyAtN7-KIU2yT68bkrgBXRyIxLL_blLGf4M' }}
           defaultCenter={{
             lat: 14.7563,

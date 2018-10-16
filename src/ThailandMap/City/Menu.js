@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react';
-import classnames from 'classnames';
+import React from 'react';
 
 const Menu = ({ setStart, setEnd, onClose }) => (
   <div className="menu">
