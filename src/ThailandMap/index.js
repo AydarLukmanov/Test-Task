@@ -1,64 +1,43 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
+import { citiesMap, roads, getAllPossiblePaths } from './MapData';
 import City from './City';
-
-const citiesMap = {
-  A: {
-    name: 'Bangkok',
-    lat: 13.7563,
-    lng: 100.5018,
-  },
-  B: {
-    name: 'Pattaya',
-    lat: 12.9236,
-    lng: 100.8825,
-  },
-  C: {
-    name: 'Chiang Mai',
-    lat: 18.7061,
-    lng: 98.9817,
-  },
-  D: {
-    name: 'Phitsanulok',
-    lat: 16.8211,
-    lng: 100.2659,
-  },
-  E: {
-    name: 'Khon Kaen',
-    lat: 16.4322,
-    lng: 102.8236,
-  },
-  F: {
-    name: 'Chumphon Province',
-    lat: 10.493,
-    lng: 99.18,
-  },
-};
-
-const exampleWeights = 'AB1, AC4, AD10, BE3, CD4, CF2, DE1, EB3, EA2, FD1';
-
-const grapth = exampleWeights.split(', ').map((str) => {
-  const from = citiesMap[str[0]];
-  const to = citiesMap[str[1]];
-  const weight = parseInt(str[2], 10);
-  return {
-    from,
-    to,
-    weight,
-  };
-});
+import Paths from './Paths';
 
 export default class ThailandMap extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
+  state = {
+    start: null,
+    end: null,
+    selectedPath: null,
+  };
+
+  computePaths = () => {
+    const { start, end } = this.state;
+
+    this.setState({
+      paths: getAllPossiblePaths(start, end, roads),
+      selectedPath: null,
+    });
+  };
+
+  selectPath = selectedPath => this.setState({ selectedPath });
 
   render() {
-    const selectedPath = null;
+    const {
+      start, end, paths, selectedPath,
+    } = this.state;
 
     return (
       <div className="map">
+        <div className="paths">
+          <Paths
+            start={start}
+            end={end}
+            selectPath={this.selectPath}
+            selectedPath={selectedPath}
+            paths={paths}
+          />
+        </div>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyAtN7-KIU2yT68bkrgBXRyIxLL_blLGf4M' }}
           defaultCenter={{
@@ -70,9 +49,16 @@ export default class ThailandMap extends Component {
           {Object.keys(citiesMap).map((key) => {
             const city = citiesMap[key];
             const { name, lat, lng } = city;
+            const active = selectedPath !== null
+              && paths[selectedPath].find(({ from, to }) => city === from || city === to);
+
             return (
               <City
-                inactive={selectedPath && !selectedPath.includes(city)}
+                setStart={() => this.setState({ start: city }, this.computePaths)}
+                setEnd={() => this.setState({ end: city }, this.computePaths)}
+                inactive={!active}
+                start={city === start}
+                end={city === end}
                 key={key}
                 lat={lat}
                 lng={lng}
